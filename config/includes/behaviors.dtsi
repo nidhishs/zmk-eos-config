@@ -29,14 +29,21 @@ ZMK_HOLD_TAP(hmr,
 /* ------------- */
 
 /* BT Controls */
-#define BT0 &bt BT_SEL 0
-#define BT1 &bt BT_SEL 1
-#define BT2 &bt BT_SEL 2
-ZMK_TAP_DANCE(
-    bt_clr,
-    tapping-term-ms=<250>;
-    bindings=<&none>,<&bt BT_CLR>;
+// tap = select profile N, hold 2s = select profile N then clear its bond
+ZMK_MACRO_ONE_PARAM(bt_sel_p,
+    bindings=<&macro_param_1to2>,<&macro_tap &bt BT_SEL MACRO_PLACEHOLDER>;
 )
+ZMK_MACRO_ONE_PARAM(bt_clr_p,
+    bindings=<&macro_param_1to2>,<&macro_tap &bt BT_SEL MACRO_PLACEHOLDER>,<&macro_tap &bt BT_CLR>;
+)
+ZMK_HOLD_TAP(ht_bt,
+    flavor="hold-preferred";
+    tapping-term-ms=<2000>;
+    bindings=<&bt_clr_p>,<&bt_sel_p>;
+)
+#define BT0 &ht_bt 0 0
+#define BT1 &ht_bt 1 1
+#define BT2 &ht_bt 2 2
 /* ------------- */
 
 /* Auto Shift */
